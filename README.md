@@ -32,11 +32,23 @@ _Audrey is a Python-based embodied conversational agent (ECA) that enables rich 
 
 Clone the repository:
 ```bash
-git clone https://github.com/bobsync/audrey-ECA.git
+git clone https://github.com/bobsync/ENIB.git
 cd audrey-ECA
 ```
 
-### 📌 Prerequisites
+---
+
+## 🎮 Unity Project (Required)
+
+A Unity project is required to run the 3D avatar interface. Download it from the link below:
+
+- 🔗 [Download from Google Drive](https://drive.google.com/uc?export=download&id=19jHt5FK66PhmNEqUYv8_euIYvddV4THG)
+
+Unzip the project and open it with **Unity 2021.3.9f1 LTS**.
+
+---
+
+## 📌 Prerequisites
 
 To use `webrtcvad`, you need to install the [Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
 
@@ -77,4 +89,4 @@ python speech/download_and_convert.py
 This will:
 - Download the Whisper `small.en` model from Hugging Face  
 - Convert it to the CTranslate2 format for use with FasterWhisper  
-- Optionally delete the original download after conversion  
+- Optionally delete the original download after conversion
