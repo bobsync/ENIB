@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<bml xmlns="http://www.bml-initiative.org/bml/bml-1.0" xmlns:ext="http://www.bml-initiative.org/bml/coreextensions-1.0" 
+id="bml3" characterId="Audrey" composition="APPEND">
+  
+  <gaze id="g0" start="0" end="s1:tm7+1" target="Camera"/>
+  <faceLexeme id="f1" lexeme="HAPPINESS" amount="0" start="2" end="s1:tm4"/>
+  <gesture id="ges0" lexeme="hello" mode="RIGHT_HAND" amount = "1" start="s1:tm1" end ="s1:tm2"/>
+  <gesture id="ges1" lexeme="me" mode="RIGHT_HAND" amount = "1" start="s1:tm3" end ="s1:tm4"/>
+  <gesture id="ges2" lexeme="handUp" mode="LEFT_HAND" amount = "1" start="s1:tm4+0.5" end ="s1:tm5"/>
+  <gesture id="ges3" lexeme="handDown" mode="RIGHT_HAND" amount = "1" start="s1:tm5+0.5" end ="s1:tm6"/>
+  <head id="h1" lexeme="TILT_LEFT" start="s1:tm5+0.5" end ="s1:tm6"/>
+  <pointing id="po1" target="plate" start="s1:tm6+0.5" end ="s1:tm7"/>
+  <gaze id="g1" start="s1:tm6" end="s1:tm7+1" target="plate"/>
+  <head id="h2" lexeme="NOD" start="s1:tm6+1" end ="s1:tm7" repetition="1"/>
+  
+    <speech id="s1" start="0">
+    <description priority="2" type="application/ssml+xml">
+      <speak>
+        <mark name="tm1"/> Hello, <mark name="tm2"/> how are you? 
+        <mark name="tm3"/> My name is Audrey, <mark name="tm4"/> I'm a conversational agent.
+        <mark name="tm5"/> Nice to meet you! <mark name="tm6"/> What are you eating today?. <mark name="tm7"/>
+      </speak>
+    </description>
+  </speech>
+</bml>

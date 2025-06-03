@@ -1,0 +1,182 @@
+{
+    "hand": {
+        "pointing": {
+            "description": "Indica oggetti o direzioni",
+            "contexts": [
+                "indicare",
+                "mostrare",
+                "guardare",
+                "direzione",
+                "luogo",
+                "location"
+            ]
+        },
+        "open_hand": {
+            "description": "Gesto di apertura o accoglienza",
+            "contexts": [
+                "ciao",
+                "salve",
+                "benvenuto",
+                "apertura",
+                "inizio"
+            ]
+        },
+        "closed_fist": {
+            "description": "Gesto di determinazione o forza",
+            "contexts": [
+                "lotta",
+                "forza",
+                "intenso",
+                "motivato"
+            ]
+        },
+        "hand_on_heart": {
+            "description": "Espressione di sincerità o emozione",
+            "contexts": [
+                "grazie",
+                "emozione",
+                "sincero",
+                "apprezzamento"
+            ]
+        },
+        "self_point": {
+            "description": "Indicare sé stessi",
+            "contexts": [
+                "io",
+                "me",
+                "myself"
+            ]
+        }
+    },
+    "face": {
+        "SMILE": {
+            "description": "Sorriso naturale",
+            "contexts": [
+                "felice",
+                "contento",
+                "piacere",
+                "amichevole"
+            ]
+        },
+        "SADNESS": {
+            "description": "Tristezza leggera",
+            "contexts": [
+                "triste",
+                "solitudine",
+                "perdere",
+                "dispiacere"
+            ]
+        },
+        "ANGER": {
+            "description": "Espressione di rabbia",
+            "contexts": [
+                "rabbia",
+                "ingiusto",
+                "frustrazione"
+            ]
+        },
+        "SURPRISE": {
+            "description": "Espressione di sorpresa",
+            "contexts": [
+                "sorpresa",
+                "davvero",
+                "inaspettato"
+            ]
+        },
+        "DISGUST": {
+            "description": "Espressione di disgusto",
+            "contexts": [
+                "disgusto",
+                "schifo",
+                "ripugnante"
+            ]
+        }
+    },
+    "head": {
+        "nod": {
+            "description": "Annuire per confermare",
+            "contexts": [
+                "sì",
+                "conferma",
+                "giusto",
+                "vero"
+            ]
+        },
+        "shake": {
+            "description": "Scuotere per negare",
+            "contexts": [
+                "no",
+                "negazione",
+                "sbagliato",
+                "non"
+            ]
+        },
+        "tilt_left": {
+            "description": "Inclinazione curiosa",
+            "contexts": [
+                "curioso",
+                "pensare",
+                "riflettere"
+            ]
+        },
+        "tilt_right": {
+            "description": "Inclinazione rilassata",
+            "contexts": [
+                "interesse",
+                "attenzione",
+                "rilassato"
+            ]
+        },
+        "look_left": {
+            "description": "Guardare a sinistra",
+            "contexts": [
+                "sinistra",
+                "laggiù",
+                "oggetto"
+            ]
+        },
+        "look_right": {
+            "description": "Guardare a destra",
+            "contexts": [
+                "destra",
+                "lì",
+                "persona"
+            ]
+        }
+    },
+    "posture": {
+        "stand_open": {
+            "description": "Postura aperta e accogliente",
+            "contexts": [
+                "aperto",
+                "sociale",
+                "accoglienza"
+            ]
+        },
+        "stand_closed": {
+            "description": "Postura chiusa o difensiva",
+            "contexts": [
+                "chiuso",
+                "difensivo",
+                "timido"
+            ]
+        },
+        "thankful": {
+            "description": "Espressione grata",
+            "contexts": [
+                "grazie",
+                "apprezzamento",
+                "gratitudine"
+            ]
+        },
+        "celebration": {
+            "description": "Postura entusiasta o di festa",
+            "contexts": [
+                "festa",
+                "celebrare",
+                "vittoria",
+                "successo"
+            ]
+        }
+    }
+}

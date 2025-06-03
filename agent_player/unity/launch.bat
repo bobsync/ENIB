@@ -1,0 +1,2 @@
+start Minimal_BehaviorRealizer.exe
+exit

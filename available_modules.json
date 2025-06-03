@@ -1,0 +1,22 @@
+[
+    {
+        "name": "decider/conversation_gesture",
+        "launch_path": "decider/launcher.bat"
+    },
+    {
+        "name": "agent_player/unity",
+        "launch_path": "agent_player/unity/launch.bat"
+    },
+    {
+        "name": "large_language_model/llama3_online_groq",
+        "launch_path": "large_language_model/llama3_online_groq/launch.bat"
+    },
+    {
+        "name": "speech/realtime_whisper",
+        "launch_path": "speech/realtime_whisper/launch.bat"
+    },
+    {
+        "name": "gabriele/action_recognizer",
+        "launch_path": "webcam/launch_christian.bat"
+    }
+]
