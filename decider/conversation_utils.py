@@ -44,3 +44,11 @@ def extract_bmls_from_agent_response(text):
     agent_speech_text = re.sub(pattern, '', text)
     filtered_bmls = filter_bmls(bmls)
     return agent_speech_text, filtered_bmls
+
+def check_goodbye(sentence: str) -> bool:
+    """
+    Verifica se la frase termina con 'goodbye' o 'good bye',
+    ignorando spazi e punteggiatura finale.
+    """
+    sentence = sentence.strip().lower().rstrip(".!?")
+    return sentence.endswith("goodbye") or sentence.endswith("good bye")

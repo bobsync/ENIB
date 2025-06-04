@@ -90,3 +90,12 @@ This will:
 - Download the Whisper `small.en` model from Hugging Face  
 - Convert it to the CTranslate2 format for use with FasterWhisper  
 - Optionally delete the original download after conversion
+
+## Testers
+
+Beatrice Schisano : schisano25@gmail.com
+Giacomo Zezza : giacomozezza@live.it
+Carmen Barbesco : barbescocarmen@gmail.com
+Alessia Vastola :
+Francesco Sorrentino :
+Giorgia Ungaro : 

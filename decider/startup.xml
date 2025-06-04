@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <bml xmlns="http://www.bml-initiative.org/bml/bml-1.0" xmlns:ext="http://www.bml-initiative.org/bml/coreextensions-1.0" 
 id="bml3" characterId="Audrey" composition="APPEND">
-  
-  <gaze id="g0" start="0" end="s1:tm7+1" target="Camera"/>
+
+  <gazedirectionshift id="g1" start="0" target="Camera"/>
   <faceLexeme id="f1" lexeme="HAPPINESS" amount="0" start="2" end="s1:tm4"/>
   <gesture id="ges0" lexeme="hello" mode="RIGHT_HAND" amount = "1" start="s1:tm1" end ="s1:tm2"/>
   <gesture id="ges1" lexeme="me" mode="RIGHT_HAND" amount = "1" start="s1:tm3" end ="s1:tm4"/>
