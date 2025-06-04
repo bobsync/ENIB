@@ -90,3 +90,11 @@ This will:
 - Download the Whisper `small.en` model from Hugging Face  
 - Convert it to the CTranslate2 format for use with FasterWhisper  
 - Optionally delete the original download after conversion
+After the model has been converted, your setup is complete.
+
+### 6. Launch Audrey
+Run the main launch script to start all components:
+```cmd
+launch_as_main_pc.bat
+```
+This will open the whiteboard, the graphical interface, and the required modules.
