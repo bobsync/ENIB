@@ -65,3 +65,5 @@ whiteboard/x64/Debug/logs/
 # 📦 Other
 # ============================================
 *.bak
+
+decider/output_bml.xml

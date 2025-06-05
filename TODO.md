@@ -8,7 +8,7 @@
 
 ## 🐞 Bugs
 - [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto
-- [ ] Le frasi troncate rimangono in coda e vengono inviate dopo la risposta alla prima metà
+- [X] Le frasi troncate rimangono in coda e vengono inviate dopo la risposta alla prima metà
 
 ## 🧹 Code Cleanup / Refactor
 - [ ] Automatizzare la creazione della whiteboard localmente invece di caricarla su GitHub

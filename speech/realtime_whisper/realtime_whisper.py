@@ -34,6 +34,7 @@ class SpeechToText():
         self.model_path = "models/whisper_small_en_ct_32"
         self.results_topic = "USER_FULL_SENTENCE_PERCEPTION"
         self.udp_client = udp_client
+        self.pending_sentences = []
 
         self.input_device_index = get_index_audio_device(config["input_device_name"])
         self.recorder = AudioToTextRecorder(
@@ -65,7 +66,12 @@ class SpeechToText():
             self.user_full_sentence = user_full_sentence
         else:
             self.user_full_sentence = None
-    
+
+    def clear_pending_sentences(self):
+        """Svuota la lista di frasi in attesa."""
+        if self.pending_sentences:
+            print("[INFO] Frasi in attesa eliminate durante il parlato dell'agente.")
+            self.pending_sentences.clear()    
         
     def update(self):
         """ Is called by the interface update function and sends the new user sentences 

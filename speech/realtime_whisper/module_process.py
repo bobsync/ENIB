@@ -116,6 +116,8 @@ class App(customtkinter.CTk):
             elif "speech on" in message:
                 print("set microphone off")
                 self.stt.recorder.set_microphone(False)
+                self.stt.clear_pending_sentences()  # <-- QUI
+
                 
         user_full_sentence = self.stt.update()
         if user_full_sentence is not None:
