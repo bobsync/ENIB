@@ -8,7 +8,6 @@ id="bml3" characterId="Audrey" composition="APPEND">
   <gesture id="ges1" lexeme="me" mode="RIGHT_HAND" amount = "1" start="s1:tm3" end ="s1:tm4"/>
   <gesture id="ges2" lexeme="handUp" mode="LEFT_HAND" amount = "1" start="s1:tm4+0.5" end ="s1:tm5"/>
   <gesture id="ges3" lexeme="handDown" mode="RIGHT_HAND" amount = "1" start="s1:tm5+0.5" end ="s1:tm6"/>
-  <head id="h1" lexeme="TILT_LEFT" start="s1:tm5+0.5" end ="s1:tm6"/>
   <pointing id="po1" target="plate" start="s1:tm6+0.5" end ="s1:tm7"/>
   <gaze id="g1" start="s1:tm6" end="s1:tm7+1" target="plate"/>
   <head id="h2" lexeme="NOD" start="s1:tm6+1" end ="s1:tm7" repetition="1"/>

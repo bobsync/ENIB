@@ -26,7 +26,7 @@ FACE_LEXEMES = [
     "DISGUST",
     "FROWN",
 ]
-GESTURE_LIST = ["hello", "handDown", "handUp", "me", "you", "welldone"]
+GESTURE_LIST = ["hello", "handDown", "handUp", "me", "you"]
 HEAD_MOVES = [
     "nod", "shake", "wobble", "forward", "backward", "up", "down",
     "left", "right", "tiltr", "tiltl", "up_right", "up_left",
@@ -74,6 +74,17 @@ def find_gesture_candidates(text: str, max_gestures: int = 5) -> List[str]:
     """
     blob = TextBlob(text)
     scores: Dict[str, int] = {}
+
+    # BOOST: se la frase è lunga, forziamo 'handup', 'handdown' e 'me'
+    boost_targets = {"handup", "handdown", "me"}
+    word_count = len(text.split())
+
+    if word_count > 12:
+        for bt in boost_targets:
+            scores[bt] = 10  # priorità molto alta
+    elif word_count > 7:
+        for bt in boost_targets:
+            scores[bt] = 6  # priorità moderata
 
     for word, tag in blob.tags:
         token = word.lower().strip(".,!?'" )
@@ -222,6 +233,8 @@ def generate_gestures(words: List[str]) -> List[Dict[str, Any]]:
             })
     return entries
 
+from nltk.tokenize import sent_tokenize
+import random
 
 def render_bml(
     xml_id: str,
@@ -234,12 +247,6 @@ def render_bml(
     Create a BML XML string combining posture, gaze, gestures, and speech.
     """
     polarity = TextBlob(full_text).sentiment.polarity
-    posture = None
-    if polarity > 0.1:
-        posture = "akimbo"
-    elif polarity < -0.1:
-        posture = "armCrossed"
-
     lines: List[str] = [
         '<?xml version="1.0" encoding="utf-8" ?>',
         f'<bml xmlns="http://www.bml-initiative.org/bml/bml-1.0" '
@@ -247,20 +254,57 @@ def render_bml(
         f'  id="{xml_id}" characterId="Audrey" composition="APPEND">',
     ]
 
-    # Add posture if determined
-    if posture:
-        lines += [
-            '  <posture id="pos1" start="0" end="2">',
-            f'    <stance type="{posture}"/>',
-            '    <target name="User" facing="FRONT"/>',
-            '  </posture>',
-        ]
+    # Determine posture blocks
+    posture_blocks = []
 
-    # Unified gaze throughout speech
-    lines.append(f'  <gaze id="g0" start="0" ' +
-                 f'end="s1:tm{last_idx}+1" target="Camera"/>')
+    if polarity < -0.1:
+        # Use a single 'armCrossed' posture for negative sentiment
+        posture_blocks.append(
+            f'  <posture id="pos1" start="0" end="s1:tm{last_idx}+1">\n'
+            f'    <stance type="armCrossed"/>\n'
+            f'    <target name="User" facing="FRONT"/>\n'
+            f'  </posture>'
+        )
+    else:
+        # Posture rotation
+        posture_variants = ["akimboLeft", "akimboRight", "akimbo"]
+        random.shuffle(posture_variants)
 
-    # Counters for unique IDs
+        # Always add the first posture at the beginning
+        random_length = random.randint(2, 4)
+        lex = posture_variants[0]
+        posture_blocks.append(
+            f'  <posture id="pos1" start="0" end="start+{random_length}">\n'
+            f'    <stance type="{lex}"/>\n'
+            f'    <target name="User" facing="FRONT"/>\n'
+            f'  </posture>'
+        )
+
+        # Add more if text is long
+        char_len = len(full_text)
+        if char_len >= 300:
+            n_additional = 1 if char_len < 500 else 2  # Max 2 extra, for a total of 3
+            n_additional = min(n_additional, 2)
+
+            step = max(1, last_idx // (n_additional + 1))
+            for i in range(n_additional):
+                start_tm = f"s1:tm{min((i + 1) * step, last_idx)}"
+                random_length = random.randint(2, 4)
+                lex = posture_variants[(i + 1) % len(posture_variants)]
+                posture_blocks.append(
+                    f'  <posture id="pos{i+2}" start="{start_tm}" end="start+{random_length}">\n'
+                    f'    <stance type="{lex}"/>\n'
+                    f'    <target name="User" facing="FRONT"/>\n'
+                    f'  </posture>'
+                )
+
+    # Add posture blocks
+    lines += posture_blocks
+
+    # Add gaze
+    lines.append(f'  <gaze id="g0" start="0" end="s1:tm{last_idx}+1" target="Camera"/>')
+
+    # Add gestures
     counts = {"face": 0, "head": 0, "gesture": 0, "pointing": 0}
     for g in gestures:
         gtype = g["type"]
@@ -274,12 +318,12 @@ def render_bml(
         elif gtype == "gesture":
             lines.append(
                 f'  <gesture id="{gid}" lexeme="{g["lexeme"]}" '
-                f'mode="{g.get("mode","RIGHT_HAND")}" amount="1" '
+                f'mode="{g.get("mode", "RIGHT_HAND")}" amount="1" '
                 f'start="{g["start"]}" end="{g["end"]}"/>'
             )
         elif gtype == "pointing":
             lines.append(
-                f'  <pointing id="{gid}" target="{g.get("target","plate")}" '
+                f'  <pointing id="{gid}" target="{g.get("target", "plate")}" '
                 f'start="{g["start"]}" end="{g["end"]}"/>'
             )
         elif gtype == "head":
@@ -288,7 +332,7 @@ def render_bml(
                 f'start="{g["start"]}" end="{g["end"]}"/>'
             )
 
-    # Add speech block with markers
+    # Add speech block
     lines += [
         '  <speech id="s1" start="0">',
         '    <description priority="2" type="application/ssml+xml">',
@@ -300,7 +344,6 @@ def render_bml(
         '</bml>',
     ]
     return "\n".join(lines)
-
 
 def pipeline(text: str, max_gestures: int = 5) -> str:
     """
