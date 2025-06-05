@@ -23,10 +23,12 @@ ICEBREAKER_FOLDER = "icebreakers"  # Cartella dei BML per inattività
 STARTUP_BML_FILE = "startup.xml"  # BML iniziale al boot
 PROMPT_FILE = "prompt_bml_plain.txt"  # Prompt iniziale per il LLM
 INACTIVITY_TIMEOUT = 50  # Timeout inattività in secondi
+GAZE_SHIFT_INTERVAL = random.randint(7, 15)  # intervallo casuale
 
 # Stato globale
 used_icebreakers: set[str] = set()
 last_user_interaction_time: float = time.time()
+last_gaze_shift_time = time.time()
 
 # Moduli richiesti per iniziare l'interazione
 REQUIRED_MODULES = {
@@ -190,6 +192,21 @@ def handle_inactivity():
             })
             reset_inactivity_timer()
 
+def send_random_gaze_bml():
+    directions = ["left", "right", "up", "down"]
+    chosen_target = random.choice(directions)
+    duration = random.randint(2, 4)
+    
+    bml = f"""
+    <bml xmlns="http://www.bml-initiative.org/bml/bml-1.0" id="gazeShift" characterId="Audrey" composition="MERGE">
+        <gaze id="g0" start="0" end="start+{duration}" target="{chosen_target}"/>
+    </bml>
+    """
+    
+    agent_player.agent.send_bml(bml)
+    print(f"[GAZE SHIFT] Audrey guarda verso {chosen_target} per {duration} secondi.")
+
+
 # === CICLO PRINCIPALE ===
 
 udp_client.send(f'COMMON:MODULE_SUCCESSFULLY_ACTIVATED:{MODULE_FULL_NAME}')
@@ -208,6 +225,11 @@ while True:
 
     if startup_message_sent:
         handle_inactivity()
+        
+        if time.time() - last_gaze_shift_time > GAZE_SHIFT_INTERVAL:
+            send_random_gaze_bml()
+            last_gaze_shift_time = time.time()
+            GAZE_SHIFT_INTERVAL = random.randint(7, 12)
 
         if (agent_status := received_messages.get('AGENT_PLAYER_STATUS')):
             print("[DEBUG] AGENT_PLAYER_STATUS message:", agent_status)
@@ -231,7 +253,6 @@ while True:
             if goodbye_triggered:
                 handle_goodbye_sequence()
                 break
-
 
 # === CHIUSURA ===
 
