@@ -18,7 +18,7 @@
 ## 📈 Improvements
 - [ ] L’agente dovrebbe distogliere lo sguardo ogni tanto, per maggiore realismo
 - [X] Rimuovere l'azione “welldone”
-- [ ] Aumentare la frequenza di “handup”, “handdown”, “me” in base alla lunghezza della frase
+- [X] Aumentare la frequenza di “handup”, “handdown”, “me” in base alla lunghezza della frase
 - [X] Se la risposta contiene più frasi, variare la postura una volta per frase, proporzionalmente
 
 ## 📝 Notes

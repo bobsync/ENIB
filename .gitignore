@@ -67,3 +67,4 @@ whiteboard/x64/Debug/logs/
 *.bak
 
 decider/output_bml.xml
+decider/test/

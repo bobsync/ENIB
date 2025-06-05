@@ -13,7 +13,7 @@ import json
 from setup_udp_client import udp_client  # Gestione della comunicazione via UDP
 from agent_player_utils import AgentPlayerControl  # Controllo del comportamento dell'agente
 from conversation_utils import maybe_update_agent_interaction, check_goodbye  # Logica per risposte rapide dell'agente
-from nlp import pipeline  # Converte risposte LLM in BML
+from pipeline_debug import pipeline  # Converte risposte LLM in BML
 import xml.etree.ElementTree as ET  # Per parsing di file XML
 
 # === CONFIGURAZIONE ===
