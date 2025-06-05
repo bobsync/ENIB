@@ -3,11 +3,11 @@
 ## 🚀 Features
 - [X] Far guardare Audrey nella stessa direzione dell'utente fin dall'inizio
 - [X] Aggiungere una parola di chiusura all’interazione, ad esempio “Goodbye”
-- [ ] Creare un action recognizer per rilevare se l’utente sta sorridendo
-- [ ] Aggiungere build del progetto Unity per lanciarlo direttamente da GUI
+- [X] Aggiungere build del progetto Unity per lanciarlo direttamente da GUI
+- [ ] EatingDetection / ActionRecognition da migliorare per riconoscere con più precisione le azioni
 
 ## 🐞 Bugs
-- [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto
+- [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
 - [X] Le frasi troncate rimangono in coda e vengono inviate dopo la risposta alla prima metà
 
 ## 🧹 Code Cleanup / Refactor

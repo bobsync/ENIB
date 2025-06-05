@@ -68,3 +68,10 @@ whiteboard/x64/Debug/logs/
 
 decider/output_bml.xml
 decider/test/
+
+agent_player/unity/build_unity.zip
+agent_player/unity/Minimal_BehaviorRealizer.exe
+agent_player/unity/UnityCrashHandler64.exe
+agent_player/unity/UnityPlayer.dll
+agent_player/unity/MonoBleedingEdge
+agent_player/unity/Minimal_BehaviorRealizer_Data
