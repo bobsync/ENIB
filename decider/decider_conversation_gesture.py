@@ -22,7 +22,7 @@ MODULE_FULL_NAME = "DECIDER/CONVERSATION_GESTURE"  # Nome identificativo del mod
 ICEBREAKER_FOLDER = "icebreakers"  # Cartella dei BML per inattività
 STARTUP_BML_FILE = "startup.xml"  # BML iniziale al boot
 PROMPT_FILE = "prompt_bml_plain.txt"  # Prompt iniziale per il LLM
-INACTIVITY_TIMEOUT = 50  # Timeout inattività in secondi
+INACTIVITY_TIMEOUT = 15  # Timeout inattività in secondi
 GAZE_SHIFT_INTERVAL = random.randint(7, 15)  # intervallo casuale
 
 # Stato globale
@@ -101,7 +101,7 @@ def check_all_modules_activated(message: str) -> bool:
 
 def process_user_sentence(sentence: str):
     """Gestisce una nuova frase dell'utente."""
-    global last_user_interaction_time, agent_interaction, goodbye_triggered
+    global last_user_interaction_time, agent_interaction, goodbye_triggered, speaking
 
     print("User -", sentence)
 
@@ -109,6 +109,7 @@ def process_user_sentence(sentence: str):
 
     agent_interaction, agent_response = maybe_update_agent_interaction(sentence, agent_interaction)
     if agent_response:
+        speaking = True
         agent_player.agent.speak(agent_response)
         return
 
@@ -211,6 +212,8 @@ def send_random_gaze_bml():
 
 udp_client.send(f'COMMON:MODULE_SUCCESSFULLY_ACTIVATED:{MODULE_FULL_NAME}')
 
+speaking = False
+
 while True:
     received_messages = udp_client.get_received_messages()
 
@@ -222,11 +225,12 @@ while True:
 
         if check_all_modules_activated(message) and not startup_message_sent:
             send_startup_message()
+            time.sleep(5)
 
     if startup_message_sent:
         handle_inactivity()
         
-        if time.time() - last_gaze_shift_time > GAZE_SHIFT_INTERVAL:
+        if time.time() - last_gaze_shift_time > GAZE_SHIFT_INTERVAL and not speaking:
             send_random_gaze_bml()
             last_gaze_shift_time = time.time()
             GAZE_SHIFT_INTERVAL = random.randint(7, 12)
@@ -236,6 +240,7 @@ while True:
             if "Audrey:speech off" in agent_status:
                 print("AUDREY ENDED SPEECH")
                 reset_inactivity_timer()
+                speaking = False
 
         if (context_data := received_messages.get('USER_CONTEXT_PERCEPTION')):
             try:

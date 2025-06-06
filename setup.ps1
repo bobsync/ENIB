@@ -1,7 +1,7 @@
 # Crea ambiente virtuale se non esiste
 if (!(Test-Path -Path "venv")) {
     Write-Host "Creo ambiente virtuale..."
-    python -m venv venv
+    py -3.10 -m venv venv
 }
 
 # Attiva ambiente virtuale

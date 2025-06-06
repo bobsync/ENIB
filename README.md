@@ -79,12 +79,12 @@ This script will:
 
 ### 4. Prepare NLTK for text processing:
 ```powershell
-python -m textblob.download_corpora
+py -3.10 -m textblob.download_corpora
 ```
 
 ### 5. Download and convert the Whisper model (for speech recognition):
 ```powershell
-python speech/download_and_convert.py
+py -3.10 speech/download_and_convert.py
 ```
 This will:
 - Download the Whisper `small.en` model from Hugging Face  
