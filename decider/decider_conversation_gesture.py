@@ -80,6 +80,35 @@ icebreaker_pending = False
 
 # === FUNZIONI ===
 
+current_icebreaker = None  # (group_name, variant_index)
+
+def get_next_icebreaker_variant():
+    global current_icebreaker
+
+    if current_icebreaker is None:
+        available_groups = [d for d in os.listdir(ICEBREAKER_FOLDER) if os.path.isdir(os.path.join(ICEBREAKER_FOLDER, d))]
+        unused_groups = list(set(available_groups) - used_icebreakers)
+        if not unused_groups:
+            print("[DEBUG] Nessun gruppo icebreaker disponibile.")
+            return None
+
+        chosen_group = random.choice(unused_groups)
+        used_icebreakers.add(chosen_group)
+        current_icebreaker = (chosen_group, 0)
+
+    group_name, index = current_icebreaker
+    group_path = os.path.join(ICEBREAKER_FOLDER, group_name)
+    next_file = os.path.join(group_path, f"{index + 1}.xml")
+
+    if os.path.exists(next_file):
+        current_icebreaker = (group_name, index + 1)
+        with open(next_file, "r", encoding="utf-8") as f:
+            return next_file, f.read()
+    else:
+        print(f"[DEBUG] Fine varianti per il gruppo {group_name}")
+        current_icebreaker = None
+        return None
+
 def handle_goodbye_sequence():
     print("[INFO] Frase di addio rilevata. Attendo fine del parlato di Audrey...")
     while True:
@@ -148,22 +177,6 @@ def reset_inactivity_timer():
     last_user_interaction_time = time.time()
     print("[DEBUG] Inactivity timer resettato")
 
-def get_unused_icebreaker() -> tuple[str, str] | None:
-    files = [f for f in os.listdir(ICEBREAKER_FOLDER) if f.endswith(".xml")]
-    unused_files = list(set(files) - used_icebreakers)
-    if not unused_files:
-        print("[DEBUG] Nessun icebreaker disponibile")
-        return None
-
-    chosen_filename = random.choice(unused_files)
-    used_icebreakers.add(chosen_filename)
-
-    full_path = os.path.join(ICEBREAKER_FOLDER, chosen_filename)
-    with open(full_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    return full_path, content
-
 def estrai_frase_da_bml(xml_path: str) -> str:
     tree = ET.parse(xml_path)
     root = tree.getroot()
@@ -192,7 +205,7 @@ def handle_inactivity():
 
 
         print("[DEBUG] Condizione di inattività soddisfatta. Verifica icebreaker...")
-        result = get_unused_icebreaker()
+        result = get_next_icebreaker_variant()
         if result:
             xml_path, icebreaker_bml = result
             print(f"[INFO] Inattività rilevata (> {INACTIVITY_TIMEOUT}s). Invio icebreaker.")

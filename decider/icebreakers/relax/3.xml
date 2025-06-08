@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<bml xmlns="http://www.bml-initiative.org/bml/bml-1.0"
+     xmlns:ext="http://www.bml-initiative.org/bml/coreextensions-1.0"
+     id="bml5" characterId="Audrey" composition="APPEND">
+
+  <gaze id="g0" start="0" end="s5:tm2" target="Camera"/>
+  <gesture id="ges0" lexeme="hello" mode="RIGHT_HAND" amount="1" start="s5:tm1" end="start+2"/>
+
+  <speech id="s5" start="0">
+    <description priority="2" type="application/ssml+xml">
+      <speak>
+        <mark name="tm1"/> What's something simple that helps you relax at the end of the day? <mark name="tm2"/>
+      </speak>
+    </description>
+  </speech>
+
+</bml>

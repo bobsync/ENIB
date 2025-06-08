@@ -4,7 +4,6 @@
 - [X] Far guardare Audrey nella stessa direzione dell'utente fin dall'inizio
 - [X] Aggiungere una parola di chiusura all’interazione, ad esempio “Goodbye”
 - [X] Aggiungere build del progetto Unity per lanciarlo direttamente da GUI
-- [ ] EatingDetection / ActionRecognition da migliorare per riconoscere con più precisione le azioni
 
 ## 🐞 Bugs
 - [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
@@ -26,10 +25,8 @@
 - [X] Rimuovere l'azione “welldone”
 - [X] Aumentare la frequenza di “handup”, “handdown”, “me” in base alla lunghezza della frase
 - [X] Se la risposta contiene più frasi, variare la postura una volta per frase, proporzionalmente
-- [ ] Icebreakers 3 versioni e deve richiedere la stessa domanda con parole diverse
-- [ ] Mettere solo GazeDetection e non deve fare domande se l'utente sta guardando in basso
+- [X] Icebreakers 3 versioni e deve richiedere la stessa domanda con parole diverse
+- [X] Mettere solo GazeDetection e non deve fare domande se l'utente sta guardando in basso
 
 ## 📝 Notes
-
-
-## ✅ Completed
+- [ ] EatingDetection / ActionRecognition da migliorare per riconoscere con più precisione le azioni
