@@ -221,7 +221,7 @@ def handle_inactivity():
             icebreaker_pending = False
 
 def send_random_gaze_bml():
-    directions = ["left", "right", "up", "down"]
+    directions = ["left", "right", "up", "down", "upright", "upleft"]
     chosen_target = random.choice(directions)
     duration = round(random.uniform(1,2), 2)
 

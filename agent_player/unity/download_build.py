@@ -3,7 +3,7 @@ import zipfile
 import os
 
 # ID o URL del file (usa direttamente il link condiviso)
-file_url = "https://drive.google.com/uc?id=1CaclVAiPZHaP_eh02aeJ0PYaUytB55ol"
+file_url = "https://drive.google.com/uc?id=1DrFuDtjp28A1CB7STsdShaI74uuLpgyD"
 
 zip_path = "agent_player/unity/build_unity.zip"
 estrazione_path = "agent_player/unity/"
