@@ -100,7 +100,13 @@ while True:
         print(f"Response latency : {time.time()-t0}")
         
         udp_client.send(f'{results_topic}:{llm_response}')
-            
+
+    if (message := received_messages.get("COMMON")):
+        if "BROADCAST_REQUEST_SHUTDOWN" in message:
+            print("[INFO] Ricevuto broadcast di chiusura. Uscita...")
+            udp_client.send(f"COMMON:MODULE_SUCCESSFULLY_DEACTIVATED:{MODULE_FULL_NAME}")
+            udp_client.close()
+            exit()
     
     time.sleep(0.01)
     

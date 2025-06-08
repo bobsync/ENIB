@@ -118,6 +118,13 @@ class App(customtkinter.CTk):
                 self.stt.recorder.set_microphone(False)
                 self.stt.clear_pending_sentences()  # <-- QUI
 
+        if (message := received_messages.get("COMMON")):
+            if "BROADCAST_REQUEST_SHUTDOWN" in message:
+                print("[INFO] Ricevuto broadcast di chiusura. Uscita...")
+                self.udp_client.send(f"COMMON:MODULE_SUCCESSFULLY_DEACTIVATED:{MODULE_FULL_NAME}")
+                self.udp_client.close()
+                exit()
+
                 
         user_full_sentence = self.stt.update()
         if user_full_sentence is not None:

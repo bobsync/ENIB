@@ -177,7 +177,7 @@ class App(customtkinter.CTk):
 
 if __name__ == '__main__':
     app = App()
-    #app.attributes('-topmost', True) #so the window always stays on top
+    app.attributes('-topmost', True) #so the window always stays on top
     app.mainloop()
         
     

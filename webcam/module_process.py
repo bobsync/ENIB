@@ -85,6 +85,14 @@ while cap.isOpened():
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
+    received_messages = udp_client.get_received_messages()  
+    if (message := received_messages.get("COMMON")):
+        if "BROADCAST_REQUEST_SHUTDOWN" in message:
+            print("[INFO] Ricevuto broadcast di chiusura. Uscita...")
+            udp_client.send(f"COMMON:MODULE_SUCCESSFULLY_DEACTIVATED:{MODULE_FULL_NAME}")
+            udp_client.close()
+            exit()
+
 cap.release()
 cv2.destroyAllWindows()
 udp_client.close()
