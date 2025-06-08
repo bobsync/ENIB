@@ -8,7 +8,7 @@
 ## 🐞 Bugs
 - [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
 - [X] Le frasi troncate rimangono in coda e vengono inviate dopo la risposta alla prima metà
-- [ ] I gazeshift sono troppo strani, vanno spostati gli oggetti da guardare in unity e deve guardare per meno tempo.
+- [X] I gazeshift sono troppo strani, vanno spostati gli oggetti da guardare in unity e deve guardare per meno tempo.
 - [X] In decider tutti i timer devono partire solamente dopo che sono partiti tutti i moduli.
 - [X] Audrey deve spostare lo sguardo solamente quando non sta parlando.
 - [X] Se Audrey sta già parlando non deve ovviamente partire un icebreaker
