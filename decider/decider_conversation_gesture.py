@@ -244,6 +244,7 @@ while True:
 
         if (context_data := received_messages.get('USER_CONTEXT_PERCEPTION')):
             try:
+                print(user_context.get("gaze"))
                 user_context.update(json.loads(context_data))
                 print("[USER CONTEXT UPDATED]", user_context)
             except json.JSONDecodeError:

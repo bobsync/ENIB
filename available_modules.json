@@ -16,7 +16,7 @@
         "launch_path": "speech/realtime_whisper/launch.bat"
     },
     {
-        "name": "gabriele/action_recognizer",
-        "launch_path": "webcam/launch_christian.bat"
+        "name": "webcam/gaze_detection",
+        "launch_path": "webcam/launch.bat"
     }
 ]

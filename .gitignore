@@ -19,7 +19,11 @@ venv/
 .env/
 .env
 
-webcam
+webcam/*
+!webcam/gaze.py
+!webcam/launch.bat
+!webcam/module_process.py
+
 
 # SQLite database
 *.sqlite3
