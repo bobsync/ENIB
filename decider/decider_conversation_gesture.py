@@ -76,6 +76,7 @@ last_user_interaction_time = time.time()
 goodbye_triggered = False
 speaking = False
 close_all = True
+icebreaker_pending = False
 
 # === FUNZIONI ===
 
@@ -175,7 +176,7 @@ def estrai_frase_da_bml(xml_path: str) -> str:
     return frase
 
 def handle_inactivity():
-    global last_user_interaction_time, speaking
+    global last_user_interaction_time, speaking, icebreaker_pending
     if startup_sent_time is None:
         return
 
@@ -183,13 +184,20 @@ def handle_inactivity():
         return
 
     if time.time() - last_user_interaction_time > INACTIVITY_TIMEOUT and not speaking:
+        if user_context.get("gaze", "").lower() == "down":
+            if not icebreaker_pending:
+                print("[DEBUG] Icebreaker posticipato: utente guarda in basso")
+            icebreaker_pending = True
+            return
+
+
         print("[DEBUG] Condizione di inattività soddisfatta. Verifica icebreaker...")
         result = get_unused_icebreaker()
         if result:
             xml_path, icebreaker_bml = result
             print(f"[INFO] Inattività rilevata (> {INACTIVITY_TIMEOUT}s). Invio icebreaker.")
             agent_player.agent.send_bml(icebreaker_bml)
-            speaking = True  # Imposta lo stato parlato per bloccare gaze shift immediati
+            speaking = True
 
             speak_text = estrai_frase_da_bml(xml_path)
             conversation_history.append({
@@ -197,6 +205,7 @@ def handle_inactivity():
                 'content': speak_text
             })
             reset_inactivity_timer()
+            icebreaker_pending = False
 
 def send_random_gaze_bml():
     directions = ["left", "right", "up", "down"]
@@ -266,9 +275,14 @@ while True:
 
     if (context_data := received_messages.get('USER_CONTEXT_PERCEPTION')):
         try:
-            print("[DEBUG] USER_CONTEXT - gaze:", user_context.get("gaze"))
+            old_gaze = user_context.get("gaze")
             user_context.update(json.loads(context_data))
             print("[USER CONTEXT UPDATED]", user_context)
+
+            if icebreaker_pending and user_context.get("gaze", "").lower() != "down":
+                print("[DEBUG] Icebreaker ritardato ora inviato: utente non guarda più in basso")
+                handle_inactivity()
+
         except json.JSONDecodeError:
             print("[ERROR] Malformed USER_CONTEXT_PERCEPTION data.")
 
