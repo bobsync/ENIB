@@ -5,7 +5,6 @@ Created on Wed May 15 12:09:23 2024
 @author: Maxime
 """
 
-import io
 import os
 import sys
 import json
