@@ -59,7 +59,7 @@ for subscribe in subscribes:
     
     
 # Setup llm
-llm_model = "llama3-8b-8192" #llama3-8b-8192, llama3-70b-8192, mixtral-8x7b-32768, gemma-7b-it
+llm_model = "llama-3.1-8b-instant" #llama3-8b-8192, llama3-70b-8192, mixtral-8x7b-32768, gemma-7b-it llama-3.1-8b-instant
 groq_client = Groq(
     api_key=os.environ.get("GROQ_API_KEY"),
 )

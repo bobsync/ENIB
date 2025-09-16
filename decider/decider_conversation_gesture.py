@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET  # Per parsing di file XML
 MODULE_FULL_NAME = "DECIDER/CONVERSATION_GESTURE"
 ICEBREAKER_FOLDER = "icebreakers"
 STARTUP_BML_FILE = "startup.xml"
-PROMPT_FILE = "prompt_bml_plain.txt"
+PROMPT_FILE = "BFI_prompt.txt"
 INACTIVITY_TIMEOUT = 25
 GAZE_SHIFT_INTERVAL = random.randint(5, 10)
 POST_SPEAK_DELAY = 5  # Tempo di attesa dopo il parlato prima di un gaze shift
@@ -53,7 +53,7 @@ for subscribe in SUBSCRIPTIONS:
 
 with io.open(PROMPT_FILE, mode="r", encoding="utf-8") as f:
     system_prompt_content = f.read()
-    system_prompt_reminder_content = f.read()
+    system_prompt_reminder_content = system_prompt_content  # fix: non doppio f.read()
 
 system_prompt_message = {'role': 'system', 'content': system_prompt_content}
 system_prompt_reminder_message = {'role': 'system', 'content': system_prompt_reminder_content}
@@ -81,6 +81,15 @@ icebreaker_pending = False
 # === FUNZIONI ===
 
 current_icebreaker = None  # (group_name, variant_index)
+
+def discard_current_icebreaker_group():
+    """Scarta l'intero gruppo corrente di icebreaker dopo risposta utente."""
+    global current_icebreaker
+    if current_icebreaker:
+        group_name, _ = current_icebreaker
+        used_icebreakers.add(group_name)
+        print(f"[INFO] Gruppo icebreaker '{group_name}' scartato dopo risposta utente.")
+        current_icebreaker = None
 
 def get_next_icebreaker_variant():
     global current_icebreaker
@@ -123,7 +132,7 @@ def handle_goodbye_sequence():
 
 def check_all_modules_activated(message: str) -> bool:
     if 'MODULE_SUCCESSFULLY_ACTIVATED' in message:
-        module_name = message.split(':')[1]
+        module_name = message.split(':')[-1]
         activated_modules.add(module_name)
         print(f"[INFO] Modulo attivato: {module_name}")
     return REQUIRED_MODULES.issubset(activated_modules)
@@ -131,7 +140,13 @@ def check_all_modules_activated(message: str) -> bool:
 def process_user_sentence(sentence: str):
     global last_user_interaction_time, agent_interaction, goodbye_triggered, speaking
 
+    reset_inactivity_timer()
     print("[USER]", sentence)
+
+    # 👇 Se era attivo un icebreaker, scartiamo il gruppo
+    if current_icebreaker:
+        discard_current_icebreaker_group()
+
     goodbye_triggered = check_goodbye(sentence)
 
     agent_interaction, agent_response = maybe_update_agent_interaction(sentence, agent_interaction)
