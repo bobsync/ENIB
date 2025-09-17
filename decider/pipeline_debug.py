@@ -46,7 +46,7 @@ def find_gesture_candidates(text: str, max_gestures: int = 5) -> List[str]:
         polarity = TextBlob(token).sentiment.polarity
         score = 0
 
-        print(f"[TOK] '{token}' POS={tag}, Pol={polarity:.2f}, Sem='{sem}'")
+        # print(f"[TOK] '{token}' POS={tag}, Pol={polarity:.2f}, Sem='{sem}'")
 
         if token in {"i", "you", "me", "myself"}:
             score += 1

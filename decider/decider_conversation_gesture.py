@@ -53,7 +53,7 @@ for subscribe in SUBSCRIPTIONS:
 
 with io.open(PROMPT_FILE, mode="r", encoding="utf-8") as f:
     system_prompt_content = f.read()
-    system_prompt_reminder_content = system_prompt_content  # fix: non doppio f.read()
+    system_prompt_reminder_content = f.read()
 
 system_prompt_message = {'role': 'system', 'content': system_prompt_content}
 system_prompt_reminder_message = {'role': 'system', 'content': system_prompt_reminder_content}
@@ -88,7 +88,7 @@ def discard_current_icebreaker_group():
     if current_icebreaker:
         group_name, _ = current_icebreaker
         used_icebreakers.add(group_name)
-        print(f"[INFO] Gruppo icebreaker '{group_name}' scartato dopo risposta utente.")
+        print(f"[ICEBREAKER] Gruppo icebreaker '{group_name}' scartato dopo risposta utente.")
         current_icebreaker = None
 
 def get_next_icebreaker_variant():
@@ -98,7 +98,7 @@ def get_next_icebreaker_variant():
         available_groups = [d for d in os.listdir(ICEBREAKER_FOLDER) if os.path.isdir(os.path.join(ICEBREAKER_FOLDER, d))]
         unused_groups = list(set(available_groups) - used_icebreakers)
         if not unused_groups:
-            print("[DEBUG] Nessun gruppo icebreaker disponibile.")
+            print("[ICEBREAKER] Nessun gruppo icebreaker disponibile.")
             return None
 
         chosen_group = random.choice(unused_groups)
@@ -114,17 +114,17 @@ def get_next_icebreaker_variant():
         with open(next_file, "r", encoding="utf-8") as f:
             return next_file, f.read()
     else:
-        print(f"[DEBUG] Fine varianti per il gruppo {group_name}")
+        print(f"[ICEBREAKER] Fine varianti per il gruppo {group_name}")
         current_icebreaker = None
         return None
 
 def handle_goodbye_sequence():
-    print("[INFO] Frase di addio rilevata. Attendo fine del parlato di Audrey...")
+    print("[GOODBYE] Frase di addio rilevata. Attendo fine del parlato di Audrey...")
     while True:
         received_messages = udp_client.get_received_messages()
         if (agent_status := received_messages.get('AGENT_PLAYER_STATUS')):
             if "Audrey:speech off" in agent_status:
-                print("[INFO] Audrey ha terminato di parlare. Interazione conclusa.")
+                print("[GOODBYE] Audrey ha terminato di parlare. Interazione conclusa.")
                 if close_all:
                     udp_client.send("COMMON:BROADCAST_REQUEST_SHUTDOWN") # per terminare tutto
                 break
@@ -143,7 +143,6 @@ def process_user_sentence(sentence: str):
     reset_inactivity_timer()
     print("[USER]", sentence)
 
-    # 👇 Se era attivo un icebreaker, scartiamo il gruppo
     if current_icebreaker:
         discard_current_icebreaker_group()
 
@@ -159,7 +158,7 @@ def process_user_sentence(sentence: str):
     if agent_interaction:
         conversation_history.append({'role': 'user', 'content': sentence})
         llm_query_prompt = json.dumps(
-            [system_prompt_message] + conversation_history[-8:] + [system_prompt_reminder_message]
+            [system_prompt_message] + conversation_history[-15:] + [system_prompt_reminder_message]
         )
         print("[DEBUG] Invio prompt al LLM")
         udp_client.send(f'LLM_QUERY:{llm_query_prompt}')
@@ -190,7 +189,7 @@ def send_startup_message():
 def reset_inactivity_timer():
     global last_user_interaction_time
     last_user_interaction_time = time.time()
-    print("[DEBUG] Inactivity timer resettato")
+    print("[INACTIVITY] Timer resettato")
 
 def estrai_frase_da_bml(xml_path: str) -> str:
     tree = ET.parse(xml_path)
@@ -214,16 +213,16 @@ def handle_inactivity():
     if time.time() - last_user_interaction_time > INACTIVITY_TIMEOUT and not speaking:
         if user_context.get("gaze", "").lower() == "down":
             if not icebreaker_pending:
-                print("[DEBUG] Icebreaker posticipato: utente guarda in basso")
+                print("[GAZE DOWN] Icebreaker posticipato: utente guarda in basso")
             icebreaker_pending = True
             return
 
 
-        print("[DEBUG] Condizione di inattività soddisfatta. Verifica icebreaker...")
+        print("[INACTIVITY] Condizione di inattività soddisfatta. Verifica icebreaker...")
         result = get_next_icebreaker_variant()
         if result:
             xml_path, icebreaker_bml = result
-            print(f"[INFO] Inattività rilevata (> {INACTIVITY_TIMEOUT}s). Invio icebreaker.")
+            print(f"[INACTIVITY] Inattività rilevata (> {INACTIVITY_TIMEOUT}s). Invio icebreaker.")
             agent_player.agent.send_bml(icebreaker_bml)
             speaking = True
 
@@ -240,7 +239,7 @@ def send_random_gaze_bml():
     chosen_target = random.choice(directions)
     duration = round(random.uniform(1,2), 2)
 
-    print(f"[DEBUG] Tentativo gaze shift - speaking={speaking}")
+    print(f"[GAZE SHIFT] Tentativo gaze shift - speaking={speaking}")
 
     bml = f"""
     <bml xmlns="http://www.bml-initiative.org/bml/bml-1.0" id="gazeShift" characterId="Audrey" composition="MERGE">
@@ -293,7 +292,7 @@ while True:
             GAZE_SHIFT_INTERVAL = random.randint(7, 12)
 
     if (agent_status := received_messages.get('AGENT_PLAYER_STATUS')):
-        print("[DEBUG] AGENT_PLAYER_STATUS message:", agent_status)
+        print("[AGENT_PLAYER_STATUS] message:", agent_status)
         if "Audrey:speech off" in agent_status:
             print("AUDREY ENDED SPEECH")
             reset_inactivity_timer()
@@ -308,7 +307,7 @@ while True:
             print("[USER CONTEXT UPDATED]", user_context)
 
             if icebreaker_pending and user_context.get("gaze", "").lower() != "down":
-                print("[DEBUG] Icebreaker ritardato ora inviato: utente non guarda più in basso")
+                print("[ICEBREAKER] Icebreaker ritardato ora inviato: utente non guarda più in basso")
                 handle_inactivity()
 
         except json.JSONDecodeError:

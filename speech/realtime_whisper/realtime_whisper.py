@@ -29,8 +29,6 @@ def get_index_audio_device(name):
 
 class SpeechToText():
     def __init__(self, udp_client, config):
-        
-        # Speech-to-Text Recorder Setup
         self.model_path = "models/whisper_small_en_ct_32"
         self.results_topic = "USER_FULL_SENTENCE_PERCEPTION"
         self.udp_client = udp_client
@@ -38,20 +36,42 @@ class SpeechToText():
 
         self.input_device_index = get_index_audio_device(config["input_device_name"])
         self.recorder = AudioToTextRecorder(
-            model = self.model_path,
-            spinner = False,
-            language= "en",
-            input_device_index = self.input_device_index,
-            silero_sensitivity = 0.5,
-            webrtc_sensitivity = 2,
-            post_speech_silence_duration = config["post_speech_silence_duration"],
-            min_gap_between_recordings = 0
+            model=self.model_path,
+            spinner=False,
+            language="en",
+            input_device_index=self.input_device_index,
+            silero_sensitivity=0.5,
+            webrtc_sensitivity=2,
+            post_speech_silence_duration=config["post_speech_silence_duration"],
+            min_gap_between_recordings=0,
+
+            # funzionano al contrario, non so perché
+            on_vad_detect_start=self.on_user_stop_speaking, 
+            on_vad_detect_stop=self.on_user_start_speaking,
+            enable_realtime_transcription=True,
+            on_realtime_transcription_update=self.on_partial_text
         )
-        
+
         self.user_full_sentence = None
         self.receive_text_thread = threading.Thread(target=self.receive_full_sentence)
         self.receive_text_thread.daemon = True
         self.receive_text_thread.start()
+
+    # 🔹 Evento: l’utente ha iniziato a parlare
+    def on_user_start_speaking(self):
+        self.udp_client.send("USER_STATUS:START_SPEAKING")
+        print("[DEBUG] Utente ha iniziato a parlare")
+
+    # 🔹 Evento: l’utente ha smesso di parlare
+    def on_user_stop_speaking(self):
+        self.udp_client.send("USER_STATUS:STOP_SPEAKING")
+        print("[DEBUG] Utente ha smesso di parlare")
+
+    # 🔹 Testo parziale in tempo reale
+    def on_partial_text(self, text):
+        self.udp_client.send(f"USER_PARTIAL:{text}")
+        print("[PARZIALE]", text)
+
         
     def set_post_speech_silence_duration(self, value):
         self.recorder.set_post_speech_silence_duration(value)

@@ -4,6 +4,8 @@
 - [X] Far guardare Audrey nella stessa direzione dell'utente fin dall'inizio
 - [X] Aggiungere una parola di chiusura all’interazione, ad esempio “Goodbye”
 - [X] Aggiungere build del progetto Unity per lanciarlo direttamente da GUI
+- [ ] Non far partire Audrey a parlare [ice] quando ho già iniziato a parlare
+- [ ] Download Qualtrics + personalizzazione prompt per farla parlare di meno
 
 ## 🐞 Bugs
 - [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
