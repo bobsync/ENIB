@@ -124,7 +124,7 @@ def generate_gestures(words: List[str], last_idx: int) -> List[Dict[str, Any]]:
     for i, word in enumerate(words):
         gesture = fallback_gesture(word)
         if gesture:
-            print(f"[GESTURE] {word} → {gesture}")
+            #print(f"[GESTURE] {word} → {gesture}")
             start_tag = f"s1:tm{i}"
             entries.append({
                 "id": f"g{i}",
@@ -134,7 +134,8 @@ def generate_gestures(words: List[str], last_idx: int) -> List[Dict[str, Any]]:
                 "end": "start+1",
             })
         else:
-            print(f"[NO MATCH] {word} → fallback or skipped")
+            pass
+            #print(f"[NO MATCH] {word} → fallback or skipped")
 
     return entries
 
@@ -193,17 +194,17 @@ def render_bml(xml_id: str, markers: List[str], gestures: List[Dict[str, Any]], 
 
 def pipeline(text: str, max_gestures: int = 5) -> str:
     candidates = find_gesture_candidates(text, max_gestures)
-    print(f"[CANDIDATES] {candidates}")
+    #print(f"[CANDIDATES] {candidates}")
     gen_logger.info(f"Gesture candidates: {candidates}")
     marked_text = emphasize_words(text, candidates)
-    print(f"[MARKED] {marked_text}")
+    #print(f"[MARKED] {marked_text}")
     parsed = tokenize_and_mark(marked_text)
     markers, last_idx = assign_time_markers(parsed)
     words_to_gesture = [word.strip(".,!?").lower() for word, marked in parsed if marked]
-    print(f"[GESTURE TOKENS] {words_to_gesture}")
+    #print(f"[GESTURE TOKENS] {words_to_gesture}")
     gestures = generate_gestures(words_to_gesture, last_idx)
     bml = render_bml("bml1", markers, gestures, last_idx, text)
-    print(f"[BML LEN] {len(bml)} chars, {len(gestures)} gestures\n")
+    #print(f"[BML LEN] {len(bml)} chars, {len(gestures)} gestures\n")
     return bml
 
 if __name__ == "__main__":
