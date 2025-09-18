@@ -5,7 +5,8 @@
 - [X] Aggiungere una parola di chiusura all’interazione, ad esempio “Goodbye”
 - [X] Aggiungere build del progetto Unity per lanciarlo direttamente da GUI
 - [X] Non far partire Audrey a parlare [ice] quando ho già iniziato a parlare
-- [ ] Download Qualtrics + personalizzazione prompt per farla parlare di meno
+- [ ] personalizzazione prompt per farla parlare di meno
+- [ ] turnaround per API qualtrics :<
 
 ## 🐞 Bugs
 - [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
