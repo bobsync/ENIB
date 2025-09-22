@@ -5,11 +5,13 @@
 - [X] Aggiungere una parola di chiusura all’interazione, ad esempio “Goodbye”
 - [X] Aggiungere build del progetto Unity per lanciarlo direttamente da GUI
 - [X] Non far partire Audrey a parlare [ice] quando ho già iniziato a parlare
-- [ ] personalizzazione prompt per farla parlare di meno
-- [ ] turnaround per API qualtrics :<
+- [X] personalizzazione prompt per farla parlare di meno
+- [X] turnaround per API qualtrics :<
+- [ ] cambiare il modo in cui parla, è troppo strano
+- [ ] valutare l'uso di un whisper diverso
 
 ## 🐞 Bugs
-- [ ] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
+- [X] Whisper impiega troppo tempo a caricarsi, quindi il messaggio iniziale non viene riprodotto (???)
 - [X] Le frasi troncate rimangono in coda e vengono inviate dopo la risposta alla prima metà
 - [X] I gazeshift sono troppo strani, vanno spostati gli oggetti da guardare in unity e deve guardare per meno tempo.
 - [X] In decider tutti i timer devono partire solamente dopo che sono partiti tutti i moduli.
