@@ -2,9 +2,9 @@ import os
 import pandas as pd
 
 def categorize(value: float) -> str:
-    if value < 4.0:
+    if value < 7/3:
         return "low"
-    elif value <= 7.0:
+    elif value <= (7/3)*2:
         return "medium"
     else:
         return "high"
@@ -45,7 +45,7 @@ def build_prompt(scores: dict) -> str:
     categories = {trait: categorize(val) for trait, val in scores.items()}
 
     style_lines = "\n".join(
-        f"- {trait.capitalize():<17} [{scores[trait]:>4.2f}/10]: {style_guidelines(trait, level)}"
+        f"- {trait.capitalize():<17} [{scores[trait]:>4.2f}/7]: {style_guidelines(trait, level)}"
         for trait, level in categories.items()
     )
 
@@ -101,6 +101,8 @@ if __name__ == "__main__":
 
     # Cerca la riga corrispondente
     row = df.loc[df["Q36"] == int(user_id)]
+
+    print((7/3)*2)
 
     if row.empty:
         print(f"Nessun record trovato per ID = {user_id}")
