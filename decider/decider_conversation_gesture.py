@@ -4,27 +4,45 @@ Main conversation and gesture coordination module for the agent "Audrey".
 Handles user interaction, LLM queries, BML generation, and inactivity behavior.
 @author: Maxime
 """
-
 import os
 import random
 import time
 import io
 import json
-from setup_udp_client import udp_client  # Gestione della comunicazione via UDP
-from agent_player_utils import AgentPlayerControl  # Controllo del comportamento dell'agente
-from conversation_utils import maybe_update_agent_interaction, check_goodbye  # Logica per risposte rapide dell'agente
-from pipeline_debug import pipeline  # Converte risposte LLM in BML
-import xml.etree.ElementTree as ET  # Per parsing di file XML
+from setup_udp_client import udp_client
+from agent_player_utils import AgentPlayerControl
+from conversation_utils import maybe_update_agent_interaction, check_goodbye
+from pipeline_debug import pipeline
+import xml.etree.ElementTree as ET
+from dynamic_prompt import build_prompt_from_excel
 
 # === CONFIGURAZIONE ===
 
 MODULE_FULL_NAME = "DECIDER/CONVERSATION_GESTURE"
 ICEBREAKER_FOLDER = "icebreakers"
 STARTUP_BML_FILE = "startup.xml"
-PROMPT_FILE = "BFI_prompt.txt"
+PROMPT_FILE = "prompt_bml_plain.txt"
 INACTIVITY_TIMEOUT = 25
 GAZE_SHIFT_INTERVAL = random.randint(5, 10)
-POST_SPEAK_DELAY = 5  # Tempo di attesa dopo il parlato prima di un gaze shift
+POST_SPEAK_DELAY = 5
+
+# 👉 Qui invece di sys.argv usiamo input():
+user_id = int(input("Inserisci l'ID (0 per prompt statico): ").strip())
+
+if user_id == 0:
+    print("[PROMPT] Carico prompt statico da file")
+    with io.open(PROMPT_FILE, mode="r", encoding="utf-8") as f:
+        system_prompt_content = f.read()
+        system_prompt_reminder_content = system_prompt_content
+else:
+    name, prompt = build_prompt_from_excel(user_id, "qualtrics/out/output_bfi_all.xlsx")
+    print(f"[PROMPT] Caricato per {name} (ID={user_id})")
+    print(prompt)
+    system_prompt_content = prompt
+    system_prompt_reminder_content = prompt
+
+system_prompt_message = {'role': 'system', 'content': system_prompt_content}
+system_prompt_reminder_message = {'role': 'system', 'content': system_prompt_reminder_content}
 
 # Stato globale
 used_icebreakers: set[str] = set()
@@ -51,13 +69,6 @@ SUBSCRIPTIONS = [
 
 for subscribe in SUBSCRIPTIONS:
     udp_client.send(f"Subscribe:{subscribe}")
-
-with io.open(PROMPT_FILE, mode="r", encoding="utf-8") as f:
-    system_prompt_content = f.read()
-    system_prompt_reminder_content = f.read()
-
-system_prompt_message = {'role': 'system', 'content': system_prompt_content}
-system_prompt_reminder_message = {'role': 'system', 'content': system_prompt_reminder_content}
 
 with open(STARTUP_BML_FILE, "r", encoding="utf-8") as f:
     startup_bml = f.read()
@@ -160,7 +171,7 @@ def process_user_sentence(sentence: str):
     if agent_interaction:
         conversation_history.append({'role': 'user', 'content': sentence})
         llm_query_prompt = json.dumps(
-            [system_prompt_message] + conversation_history[-15:] + [system_prompt_reminder_message]
+            [system_prompt_message] + conversation_history + [system_prompt_reminder_message]
         )
         udp_client.send(f'LLM_QUERY:{llm_query_prompt}')
 

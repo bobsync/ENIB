@@ -58,7 +58,7 @@ class App(customtkinter.CTk):
 
         # configure window
         self.title('Graphical User Interface')
-        self.geometry(f'{800}x{400}')
+        self.geometry(f'{500}x{400}')
         self.grid_columnconfigure(0, weight=1, uniform='column')
         self.grid_rowconfigure((0,1,2,3,4,5), weight=1, uniform='row')
         

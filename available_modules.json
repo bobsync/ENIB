@@ -1,11 +1,11 @@
 [
     {
-        "name": "decider/conversation_gesture",
-        "launch_path": "decider/launcher.bat"
-    },
-    {
         "name": "agent_player/unity",
         "launch_path": "agent_player/unity/launch.bat"
+    },
+    {
+        "name": "decider/conversation_gesture",
+        "launch_path": "decider/launcher.bat"
     },
     {
         "name": "large_language_model/llama3_online_groq",

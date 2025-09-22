@@ -1,10 +1,7 @@
 import os
+import pandas as pd
 
 def categorize(value: float) -> str:
-    """
-    Converts a score (on a 1-10 scale) into a low/medium/high category.
-    You can adjust the thresholds based on your questionnaire's scoring.
-    """
     if value < 4.0:
         return "low"
     elif value <= 7.0:
@@ -14,9 +11,6 @@ def categorize(value: float) -> str:
 
 
 def style_guidelines(trait: str, level: str) -> str:
-    """
-    Returns a style guideline for the given trait and level.
-    """
     mapping = {
         "openness": {
             "high": "You are open to creative and unconventional ideas. Feel free to introduce philosophical or artistic topics related to technology or university life.",
@@ -48,13 +42,8 @@ def style_guidelines(trait: str, level: str) -> str:
 
 
 def build_prompt(scores: dict) -> str:
-    """
-    Builds the dynamic prompt for Audrey, including the numerical scores.
-    The scores dictionary should contain values between 1 and 10 for each trait.
-    """
     categories = {trait: categorize(val) for trait, val in scores.items()}
 
-    # Modified section to include the numerical score with right alignment
     style_lines = "\n".join(
         f"- {trait.capitalize():<17} [{scores[trait]:>4.2f}/10]: {style_guidelines(trait, level)}"
         for trait, level in categories.items()
@@ -80,20 +69,60 @@ Remember, your purpose is to make the user feel at ease and enjoy their meal.
 """
     return base_prompt.strip()
 
+import pandas as pd
 
-# Example usage:
-scores = {
-    "openness": 7.67,
-    "conscientiousness": 6.67,
-    "extraversion": 3.33,
-    "agreeableness": 7.0,
-    "neuroticism": 5.33
-}
+def build_prompt_from_excel(user_id: int, excel_path: str) -> tuple[str, str]:
+    """Ritorna (nome, prompt) dato un ID e un Excel con i dati."""
 
-prompt = build_prompt(scores)
-print(prompt)
+    df = pd.read_excel(excel_path)
+    row = df.loc[df["Q36"] == int(user_id)]
 
-output_file_path = "decider/BFI_prompt.txt"
-os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
-with open(output_file_path, "w") as f:
-    f.write(prompt)
+    if row.empty:
+        raise ValueError(f"Nessun record trovato per ID={user_id}")
+
+    name = row.iloc[0]["name"]
+    scores = {
+        "openness": float(row.iloc[0]["openness"]),
+        "conscientiousness": float(row.iloc[0]["conscientiousness"]),
+        "extraversion": float(row.iloc[0]["extroversion"]),
+        "agreeableness": float(row.iloc[0]["agreeableness"]),
+        "neuroticism": float(row.iloc[0]["neuroticism"]),
+    }
+
+    prompt = build_prompt(scores)
+    return name, prompt
+
+if __name__ == "__main__":
+    # Input ID
+    user_id = input("Inserisci l'ID: ").strip()
+
+    # Carica file Excel
+    df = pd.read_excel("decider\qualtrics\out\output_bfi_all.xlsx")
+
+    # Cerca la riga corrispondente
+    row = df.loc[df["Q36"] == int(user_id)]
+
+    if row.empty:
+        print(f"Nessun record trovato per ID = {user_id}")
+    else:
+        name = row.iloc[0]["name"]
+
+        scores = {
+            "openness": float(row.iloc[0]["openness"]),
+            "conscientiousness": float(row.iloc[0]["conscientiousness"]),
+            "extraversion": float(row.iloc[0]["extroversion"]),
+            "agreeableness": float(row.iloc[0]["agreeableness"]),
+            "neuroticism": float(row.iloc[0]["neuroticism"]),
+        }
+
+        # Conferma con nome
+        print(f"Trovato: {name} (ID = {user_id})")
+
+        prompt = build_prompt(scores)
+        print(prompt)
+
+        # Salvataggio su file
+        output_file_path = "decider/BFI_prompt.txt"
+        os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
+        with open(output_file_path, "w", encoding="utf-8") as f:
+            f.write(prompt)
