@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 
 # === 1. Leggi tutti i file Excel nella cartella "pre" ===
 input_folder = "decider/qualtrics/pre"
-output_file = "decider/qualtrics/output_bfi_all.xlsx"
+output_file = "decider/qualtrics/out/output_bfi_all.xlsx"
 
 all_data = []
 

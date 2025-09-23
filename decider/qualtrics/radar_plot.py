@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # === 1. Importa il file excel ===
-merged_df = pd.read_excel("decider/qualtrics/output_bfi_all.xlsx")
+merged_df = pd.read_excel("decider/qualtrics/out/output_bfi_all.xlsx")
 
 # === 2. Seleziona solo i punteggi Big Five ===
 bfi_cols = ["openness", "conscientiousness", "extroversion", "agreeableness", "neuroticism"]  # ordine OCEAN
