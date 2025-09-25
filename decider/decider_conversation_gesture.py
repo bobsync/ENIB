@@ -18,7 +18,7 @@ MODULE_FULL_NAME = "DECIDER/CONVERSATION_GESTURE"
 ICEBREAKER_FOLDER = "icebreakers"
 STARTUP_BML_FILE = "startup.xml"
 PROMPT_FILE = "prompt_bml_plain.txt"
-INACTIVITY_TIMEOUT = 25
+INACTIVITY_TIMEOUT = 30
 GAZE_SHIFT_INTERVAL = random.randint(5, 10)
 POST_SPEAK_DELAY = 5
 
@@ -303,6 +303,7 @@ while True:
             user_speaking = True
             reset_inactivity_timer()
         elif "STOP_SPEAKING" in user_status:
+            reset_inactivity_timer()
             print("[USER_STATUS]: false")
             user_speaking = False
 

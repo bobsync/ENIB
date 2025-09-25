@@ -63,7 +63,7 @@ class App(customtkinter.CTk):
         self.geometry(f"{300}x{200}")
         
         # slider to control post_speech_silence_duration
-        self.slider = customtkinter.CTkSlider(self, from_=0.1, to=5, number_of_steps=49,
+        self.slider = customtkinter.CTkSlider(self, from_=0.1, to=3, number_of_steps=29,
                                              width=200, height=20,
                                              command=self.set_post_speech_silence_duration)
         self.slider.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
