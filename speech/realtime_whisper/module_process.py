@@ -43,20 +43,12 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__() 
-        self.config_file_path = "config.json"
-        self.default_config = {
+        
+        # We no longer read from a config file. The value is now hard-coded.
+        self.config = {
             "input_device_name": "Analogue 7 + 8",
-            "post_speech_silence_duration" : 0.4
+            "post_speech_silence_duration" : 1.5
         }
-        
-        if not os.path.exists(self.config_file_path):
-            # Creation of the default configuration file
-            with open(self.config_file_path, 'w') as config_file:
-                json.dump(self.default_config, config_file, indent=4)
-        
-        # Reading of the current configuration
-        with open(self.config_file_path, 'r') as config_file:
-            self.config = json.load(config_file)
             
         self.subscribes = ["AGENT_PLAYER_STATUS", "COMMON"]
         self.udp_client = UDPClient(ip_whiteboard)
@@ -64,17 +56,19 @@ class App(customtkinter.CTk):
         for subscribe in self.subscribes:
             self.udp_client.send(f"Subscribe:{subscribe}")
         
+        self.stt.recorder.set_microphone(False) # iniziamo con microfono spento e lo accendiamo solo dopo lo startup message
 
         # configure window
         self.title("realtime_whisper_IHM.py")
         self.geometry(f"{300}x{200}")
         
-        
         # slider to control post_speech_silence_duration
-        self.slider = customtkinter.CTkSlider(self, from_=0.1, to=1, number_of_steps=9,
-                                              width=200, height=20,
-                                              command=self.set_post_speech_silence_duration)
+        self.slider = customtkinter.CTkSlider(self, from_=0.1, to=5, number_of_steps=49,
+                                             width=200, height=20,
+                                             command=self.set_post_speech_silence_duration)
         self.slider.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        
+        # The slider will now always start at the hard-coded value of 1.5.
         self.slider.set(self.config['post_speech_silence_duration'])
         
         self.label = customtkinter.CTkLabel(self, text="Slider_value", fg_color="transparent")
@@ -116,7 +110,6 @@ class App(customtkinter.CTk):
             elif "speech on" in message:
                 print("set microphone off")
                 self.stt.recorder.set_microphone(False)
-                self.stt.clear_pending_sentences()  # <-- QUI
 
         if (message := received_messages.get("COMMON")):
             if "BROADCAST_REQUEST_SHUTDOWN" in message:
@@ -125,7 +118,7 @@ class App(customtkinter.CTk):
                 self.udp_client.close()
                 exit()
 
-                
+            
         user_full_sentence = self.stt.update()
         if user_full_sentence is not None:
             self.textbox.delete("0.0", "end")
@@ -140,4 +133,3 @@ if __name__ == "__main__":
     app.stt.close()
     app.udp_client.send(f'COMMON:MODULE_SUCCESSFULLY_DEACTIVATED:{MODULE_FULL_NAME}')
     app.udp_client.close()
-    

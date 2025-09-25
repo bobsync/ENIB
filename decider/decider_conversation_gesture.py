@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Main conversation and gesture coordination module for the agent "Audrey".
-Handles user interaction, LLM queries, BML generation, and inactivity behavior.
-@author: Maxime
-"""
+
 import os
 import random
 import time
@@ -26,7 +22,6 @@ INACTIVITY_TIMEOUT = 25
 GAZE_SHIFT_INTERVAL = random.randint(5, 10)
 POST_SPEAK_DELAY = 5
 
-# 👉 Qui invece di sys.argv usiamo input():
 user_id = int(input("Inserisci l'ID (0 per prompt statico): ").strip())
 
 if user_id == 0:
@@ -171,7 +166,7 @@ def process_user_sentence(sentence: str):
     if agent_interaction:
         conversation_history.append({'role': 'user', 'content': sentence})
         llm_query_prompt = json.dumps(
-            [system_prompt_message] + conversation_history + [system_prompt_reminder_message]
+            [system_prompt_message] + conversation_history[-15:]
         )
         udp_client.send(f'LLM_QUERY:{llm_query_prompt}')
 
