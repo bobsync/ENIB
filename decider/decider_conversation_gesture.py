@@ -329,7 +329,10 @@ while True:
             print("[ERROR] Malformed USER_CONTEXT_PERCEPTION data.")
 
     if (user_full_sentence := received_messages.get('USER_FULL_SENTENCE_PERCEPTION')):
-        process_user_sentence(user_full_sentence)
+        if not speaking:
+            process_user_sentence(user_full_sentence)
+        else:
+            print("[INFO] Ignorando nuova frase utente perché l'avatar sta ancora parlando.")
 
     if (llm_response := received_messages.get('LLM_RESPONSE')):
         process_llm_response(llm_response)

@@ -70,7 +70,6 @@ class SpeechToText():
     def on_partial_text(self, text):
         self.udp_client.send(f"USER_PARTIAL:{text}")
         print("[PARZIALE]", text)
-
         
     def set_post_speech_silence_duration(self, value):
         self.recorder.set_post_speech_silence_duration(value)
