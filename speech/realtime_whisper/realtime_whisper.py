@@ -9,7 +9,7 @@ from audio_recorder import AudioToTextRecorder
 
 import threading
 import pyaudio
-
+import time
 
 def get_index_audio_device(name):
     """ Get the index of an audio device using its name
@@ -42,7 +42,7 @@ class SpeechToText():
             silero_sensitivity=0.5,
             webrtc_sensitivity=2,
             post_speech_silence_duration=config["post_speech_silence_duration"],
-            min_gap_between_recordings=0,
+            min_gap_between_recordings=0.2,
 
             # funzionano al contrario, non so perché
             on_vad_detect_start=self.on_user_stop_speaking, 
@@ -77,6 +77,7 @@ class SpeechToText():
     def receive_full_sentence(self):
         while True:
             self.recorder.text(self.process_full_sentence)
+            time.sleep(0.01)
 
     def process_full_sentence(self, user_full_sentence):
         user_full_sentence = user_full_sentence.strip()

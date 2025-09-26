@@ -47,7 +47,7 @@ class App(customtkinter.CTk):
         # We no longer read from a config file. The value is now hard-coded.
         self.config = {
             "input_device_name": "Analogue 7 + 8",
-            "post_speech_silence_duration" : 1.5
+            "post_speech_silence_duration" : 1.2
         }
             
         self.subscribes = ["AGENT_PLAYER_STATUS", "COMMON"]
@@ -68,7 +68,7 @@ class App(customtkinter.CTk):
                                              command=self.set_post_speech_silence_duration)
         self.slider.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
         
-        # The slider will now always start at the hard-coded value of 1.5.
+        # The slider will now always start at the hard-coded value of 1.0.
         self.slider.set(self.config['post_speech_silence_duration'])
         
         self.label = customtkinter.CTkLabel(self, text="Slider_value", fg_color="transparent")
@@ -124,7 +124,7 @@ class App(customtkinter.CTk):
             self.textbox.delete("0.0", "end")
             self.textbox.insert("0.0", user_full_sentence)
 
-        self.after(20, self.update)
+        self.after(50, self.update)
 
 
 if __name__ == "__main__":
