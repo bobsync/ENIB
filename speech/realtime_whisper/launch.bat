@@ -1,2 +1,2 @@
-start %ACA_PYTHON_ENV_PATH%/Scripts/python module_process.py
+start %ACA_PYTHON_ENV_PATH%/Scripts/python prova.py
 exit
