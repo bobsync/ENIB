@@ -49,7 +49,7 @@ def get_index_audio_device(name):
 
 class SpeechToText:
     def __init__(self, udp_client, config):
-        self.model_path = "models/whisper_small_en_ct_32"
+        self.model_path = "models/whisper_small_en_ct_float32"
         self.results_topic = "USER_FULL_SENTENCE_PERCEPTION"
         self.udp_client = udp_client
         self.input_device_index = get_index_audio_device(config["input_device_name"])

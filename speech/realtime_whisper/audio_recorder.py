@@ -89,7 +89,7 @@ class AudioToTextRecorder:
     def __init__(self,
                  model: str = INIT_MODEL_TRANSCRIPTION,
                  language: str = "",
-                 compute_type: str = "default",
+                 compute_type: str = "int8",
                  input_device_index: int = 0,
                  gpu_device_index: Union[int, List[int]] = 0,
                  on_recording_start=None,
