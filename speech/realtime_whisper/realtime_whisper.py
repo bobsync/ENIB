@@ -9,7 +9,7 @@ from audio_recorder import AudioToTextRecorder
 
 import threading
 import pyaudio
-import time
+
 
 def get_index_audio_device(name):
     """ Get the index of an audio device using its name
@@ -29,7 +29,7 @@ def get_index_audio_device(name):
 
 class SpeechToText():
     def __init__(self, udp_client, config):
-        self.model_path = "models/whisper-small-int8"
+        self.model_path = "models/whisper_small_en_ct_32"
         self.results_topic = "USER_FULL_SENTENCE_PERCEPTION"
         self.udp_client = udp_client
 
@@ -42,7 +42,7 @@ class SpeechToText():
             silero_sensitivity=0.5,
             webrtc_sensitivity=2,
             post_speech_silence_duration=config["post_speech_silence_duration"],
-            min_gap_between_recordings=0.2,
+            min_gap_between_recordings=0,
 
             # funzionano al contrario, non so perché
             on_vad_detect_start=self.on_user_stop_speaking, 
@@ -77,7 +77,6 @@ class SpeechToText():
     def receive_full_sentence(self):
         while True:
             self.recorder.text(self.process_full_sentence)
-            time.sleep(0.01)
 
     def process_full_sentence(self, user_full_sentence):
         user_full_sentence = user_full_sentence.strip()

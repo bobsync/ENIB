@@ -47,7 +47,7 @@ class App(customtkinter.CTk):
         # We no longer read from a config file. The value is now hard-coded.
         self.config = {
             "input_device_name": "Analogue 7 + 8",
-            "post_speech_silence_duration" : 1.2
+            "post_speech_silence_duration" : 0.8
         }
             
         self.subscribes = ["AGENT_PLAYER_STATUS", "COMMON"]
@@ -124,7 +124,7 @@ class App(customtkinter.CTk):
             self.textbox.delete("0.0", "end")
             self.textbox.insert("0.0", user_full_sentence)
 
-        self.after(50, self.update)
+        self.after(20, self.update)
 
 
 if __name__ == "__main__":
